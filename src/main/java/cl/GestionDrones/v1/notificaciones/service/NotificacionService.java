@@ -57,9 +57,13 @@ public class NotificacionService {
     }
 
     
-    public List<Notificacion> obtenerPorDestinatario(Long idDestinatario, String tipoDestinatario) {
-        return notificacionRepository.selectPorDestinatario(idDestinatario, tipoDestinatario);
-    }
+    public List<Notificacion> obtenerPorIdDestinatario(Long idDestinatario) {
+    return notificacionRepository.selectPorIdDestinatario(idDestinatario);
+}
+
+    public List<Notificacion> obtenerPorTipoDestinatario(String tipoDestinatario) {
+    return notificacionRepository.selectPorTipoDestinatario(tipoDestinatario);
+}
 
     
     public List<Notificacion> obtenerPorEstado(String estado) {

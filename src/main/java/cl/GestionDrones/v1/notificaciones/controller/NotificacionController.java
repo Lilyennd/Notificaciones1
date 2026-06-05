@@ -120,16 +120,30 @@ public class NotificacionController {
         }
 
         
-        @GetMapping("/destinatario/{idDestinatario}")
-        public ResponseEntity<List<Notificacion>> buscarPorDestinatario(
-                        @PathVariable Long idDestinatario, 
-                        @RequestParam String tipoDestinatario) {
-                
-                if (idDestinatario <= 0 || tipoDestinatario == null || tipoDestinatario.trim().isEmpty()) {
+        
+        @GetMapping("/destinatario/id/{idDestinatario}")
+        public ResponseEntity<List<Notificacion>> buscarPorIdDestinatario(@PathVariable Long idDestinatario) {
+                if (idDestinatario <= 0) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
                 }
 
-                List<Notificacion> notificaciones = notificacionService.obtenerPorDestinatario(idDestinatario, tipoDestinatario);
+                List<Notificacion> notificaciones = notificacionService.obtenerPorIdDestinatario(idDestinatario);
+                
+                if (notificaciones.isEmpty()) {
+                        return ResponseEntity.noContent().build();
+                }
+                
+                return ResponseEntity.ok(notificaciones);
+        }
+
+        
+        @GetMapping("/destinatario/tipo/{tipoDestinatario}")
+        public ResponseEntity<List<Notificacion>> buscarPorTipoDestinatario(@PathVariable String tipoDestinatario) {
+                if (tipoDestinatario == null || tipoDestinatario.trim().isEmpty()) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                }
+
+                List<Notificacion> notificaciones = notificacionService.obtenerPorTipoDestinatario(tipoDestinatario);
                 
                 if (notificaciones.isEmpty()) {
                         return ResponseEntity.noContent().build();
