@@ -21,6 +21,7 @@ import cl.GestionDrones.v1.notificaciones.service.NotificacionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -56,6 +57,18 @@ public class NotificacionController {
         }
 
         @Operation(summary = "Agregar una nueva notificación", description = "Registra una notificación validando que el mensaje y destinatario no estén vacíos")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Estructura JSON de la nueva notificación a registrar",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = CreateNotificacionRequest.class),
+                examples = @ExampleObject(
+                    name = "Ejemplo de Nueva Notificación",
+                    value = "{\n  \"tipoDestinatario\": \"PILOTO\",\n  \"idDestinatario\": 45,\n  \"tipoNotificacion\": \"ALERTA_CLIMA\",\n  \"mensaje\": \"Condiciones climáticas adversas en la zona de vuelo programada; vientos sobre 30 nudos.\",\n  \"estado\": \"PENDIENTE\"\n}"
+                )
+            )
+        )
         @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Notificación registrada de manera exitosa", 
                          content = @Content(mediaType = "application/json", schema = @Schema(implementation = Notificacion.class))),
@@ -64,7 +77,6 @@ public class NotificacionController {
         })
         @PostMapping
         public ResponseEntity<Notificacion> agregarNotificacion(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Estructura JSON de la nueva notificación a registrar", required = true)
             @Valid @RequestBody CreateNotificacionRequest request
         ) {
                 
@@ -111,6 +123,18 @@ public class NotificacionController {
         }
 
         @Operation(summary = "Actualizar una notificación", description = "Modifica el estado y detalles de una notificación ya existente")
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Estructura JSON con los nuevos campos de la notificación",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = UpdateNotificacionRequest.class),
+                examples = @ExampleObject(
+                    name = "Ejemplo de Actualización de Notificación",
+                    value = "{\n  \"tipoDestinatario\": \"PILOTO\",\n  \"idDestinatario\": 45,\n  \"tipoNotificacion\": \"ALERTA_CLIMA\",\n  \"mensaje\": \"Condiciones climáticas adversas en la zona de vuelo programada; vientos sobre 30 nudos.\",\n  \"estado\": \"ENVIADO\"\n}"
+                )
+            )
+        )
         @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Notificación actualizada de manera exitosa", 
                          content = @Content(mediaType = "application/json", schema = @Schema(implementation = Notificacion.class))),
@@ -121,7 +145,6 @@ public class NotificacionController {
         public ResponseEntity<Notificacion> actualizarNotificacion(
             @Parameter(description = "ID de la notificación a actualizar", required = true, example = "1")
             @PathVariable Long id,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Estructura JSON con los nuevos campos de la notificación", required = true)
             @Valid @RequestBody UpdateNotificacionRequest request
         ) {
                 
@@ -144,7 +167,7 @@ public class NotificacionController {
 
         @Operation(summary = "Eliminar una notificación", description = "Remueve de forma permanente una notificación del sistema mediante su ID")
         @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Notificación eliminada de forma exitosa"),
+            @ApiResponse(responseCode = "204", description = "Notificación estimada de forma exitosa"),
             @ApiResponse(responseCode = "400", description = "ID proporcionado es inválido", content = @Content)
         })
         @DeleteMapping("/{id}")
